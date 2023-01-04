@@ -7,7 +7,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-const DefaultLocation = "config.yml"
+const DefaultLocation = "/etc/kubectyl/config.yml"
 
 type Configuration struct {
 	// Determines if wings should be running in debug mode. This value is ignored
