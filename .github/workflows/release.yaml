@@ -24,10 +24,10 @@ jobs:
           CGO_ENABLED: 0
           REF: ${{ github.ref }}
         run: |
-          GOARCH=amd64 go build -o dist/sftp-server_linux_amd64 -v -trimpath github.com/kubectyl/sftp-server
-          chmod 755 dist/sftp-server_linux_amd64
-          GOARCH=arm64 go build -o dist/sftp-server_linux_arm64 -v -trimpath github.com/kubectyl/sftp-server
-          chmod 755 dist/sftp-server_linux_arm64
+          GOARCH=amd64 go build -o dist/sftp-server-linux-amd64 -v -trimpath github.com/kubectyl/sftp-server
+          chmod 755 dist/sftp-server-linux-amd64
+          GOARCH=arm64 go build -o dist/sftp-server-linux-arm64 -v -trimpath github.com/kubectyl/sftp-server
+          chmod 755 dist/sftp-server-linux-arm64
 
       - name: Extract changelog
         env:
@@ -37,8 +37,8 @@ jobs:
 
       - name: Create checksum and add to changelog
         run: |
-          SUM=`cd dist && sha256sum sftp-server_linux_amd64`
-          SUM2=`cd dist && sha256sum sftp-server_linux_arm64`
+          SUM=`cd dist && sha256sum sftp-server-linux-amd64`
+          SUM2=`cd dist && sha256sum sftp-server-linux-arm64`
           echo -e "\n#### SHA256 Checksum\n\`\`\`\n$SUM\n$SUM2\n\`\`\`\n" >> ./RELEASE_CHANGELOG
           echo -e "$SUM\n$SUM2" > checksums.txt
 
@@ -68,8 +68,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/sftp-server_linux_amd64
-          asset_name: sftp-server_linux_amd64
+          asset_path: dist/sftp-server-linux-amd64
+          asset_name: sftp-server-linux-amd64
           asset_content_type: application/octet-stream
 
       - name: Upload arm64 binary
@@ -78,8 +78,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/sftp-server_linux_arm64
-          asset_name: sftp-server_linux_arm64
+          asset_path: dist/sftp-server-linux-arm64
+          asset_name: sftp-server-linux-arm64
           asset_content_type: application/octet-stream
 
       - name: Upload checksum
