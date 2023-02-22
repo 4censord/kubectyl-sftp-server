@@ -24,9 +24,9 @@ jobs:
           CGO_ENABLED: 0
           REF: ${{ github.ref }}
         run: |
-          GOARCH=amd64 go build -o dist/sftp-server_linux_amd64 -v -trimpath -ldflags="-s -w -X github.com/kubectyl/sftp-server/system.Version=${REF:11}" github.com/kubectyl/sftp-server
+          GOARCH=amd64 go build -o dist/sftp-server_linux_amd64 -v -trimpath github.com/kubectyl/sftp-server
           chmod 755 dist/sftp-server_linux_amd64
-          GOARCH=arm64 go build -o dist/sftp-server_linux_arm64 -v -trimpath -ldflags="-s -w -X github.com/kubectyl/sftp-server/system.Version=${REF:11}" github.com/kubectyl/sftp-server
+          GOARCH=arm64 go build -o dist/sftp-server_linux_arm64 -v -trimpath github.com/kubectyl/sftp-server
           chmod 755 dist/sftp-server_linux_arm64
 
       - name: Extract changelog
@@ -51,8 +51,6 @@ jobs:
           git config --local user.name "Kubectyl CI"
           git checkout -b $BRANCH
           git push -u origin $BRANCH
-          sed -i "s/var Version = \".*\"/var Version = \"${REF:11}\"/" system/const.go
-          git add system/const.go
           git commit -m "bump version for release"
           git push
 
