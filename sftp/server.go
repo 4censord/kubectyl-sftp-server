@@ -137,17 +137,16 @@ func (c *SFTPServer) AcceptInbound(conn net.Conn, config *ssh.ServerConfig) erro
 		//
 		// This will also attempt to match a specific server out of the global server
 		// store and return nil if there is no match.
-
-		// uuid := sconn.Permissions.Extensions["uuid"]
-		// srv := c.manager.Find(func(s *server.Server) bool {
-		// 	if uuid == "" {
-		// 		return false
-		// 	}
-		// 	return s.ID() == uuid
-		// })
-		// if srv == nil {
-		// 	continue
-		// }
+		uuid := sconn.Permissions.Extensions["uuid"]
+		srv := func() bool {
+			if uuid == "" {
+				return false
+			}
+			return os.Getenv("P_SERVER_UUID") == uuid
+		}
+		if !srv() {
+			continue
+		}
 
 		// Spin up a SFTP server instance for the authenticated user's server allowing
 		// them access to the underlying filesystem.
