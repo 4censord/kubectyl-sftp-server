@@ -49,9 +49,7 @@ jobs:
           BRANCH=release/${REF:10}
           git config --local user.email "ci@kubectyl.org"
           git config --local user.name "Kubectyl CI"
-          git config pull.ff only
           git checkout -b $BRANCH
-          git pull origin $BRANCH
           git push -u origin $BRANCH
           git commit -m "bump version for release"
           git push
