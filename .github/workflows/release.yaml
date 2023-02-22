@@ -51,8 +51,6 @@ jobs:
           git config --local user.name "Kubectyl CI"
           git checkout -b $BRANCH
           git push -u origin $BRANCH
-          git commit -m "bump version for release"
-          git push
 
       - name: Create release
         id: create_release
