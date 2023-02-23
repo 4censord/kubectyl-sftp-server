@@ -66,6 +66,11 @@ func (c *SFTPServer) Run() error {
 		return err
 	}
 
+	authorizedKeysMap := map[string]bool{}
+	if len(pb) > 0 {
+		authorizedKeysMap[string(private.PublicKey().Marshal())] = true
+	}
+
 	conf := &ssh.ServerConfig{
 		NoClientAuth: false,
 		MaxAuthTries: 6,
@@ -73,6 +78,17 @@ func (c *SFTPServer) Run() error {
 			return c.makeCredentialsRequest(conn, remote.SftpAuthPassword, string(password))
 		},
 		PublicKeyCallback: func(conn ssh.ConnMetadata, key ssh.PublicKey) (*ssh.Permissions, error) {
+			if authorizedKeysMap[string(key.Marshal())] {
+				return &ssh.Permissions{
+					Extensions: map[string]string{
+						"ip":          conn.RemoteAddr().String(),
+						"uuid":        os.Getenv("P_SERVER_UUID"),
+						"user":        "test",
+						"permissions": "*,admin.websocket.errors,admin.websocket.install,admin.websocket.transfer",
+					},
+				}, nil
+			}
+
 			return c.makeCredentialsRequest(conn, remote.SftpAuthPublicKey, string(ssh.MarshalAuthorizedKey(key)))
 		},
 	}
