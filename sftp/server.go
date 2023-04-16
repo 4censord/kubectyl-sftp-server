@@ -83,7 +83,7 @@ func (c *SFTPServer) Run() error {
 					Extensions: map[string]string{
 						"ip":          conn.RemoteAddr().String(),
 						"uuid":        os.Getenv("P_SERVER_UUID"),
-						"user":        "test",
+						"user":        "admin",
 						"permissions": "*,admin.websocket.errors,admin.websocket.install,admin.websocket.transfer",
 					},
 				}, nil

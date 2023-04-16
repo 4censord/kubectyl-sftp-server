@@ -22,6 +22,9 @@ import (
 func initLogging() {
 	dir := config.Get().System.LogDirectory
 	p := filepath.Join(dir, "/sftp-server.log")
+	if err := os.MkdirAll(filepath.Dir(p), 0o755); err != nil {
+		log2.Fatalf("sftp: could not create internal sftp server log directory: %s", err)
+	}
 	w, err := logrotate.NewFile(p)
 	if err != nil {
 		log2.Fatalf("failed to create server log: %s", err)

@@ -39,17 +39,6 @@ type RemoteQueryConfiguration struct {
 	// should be resolved on the Panel, and not something that should be resolved by upping this
 	// number.
 	Timeout int `default:"30" yaml:"timeout"`
-
-	// The number of servers to load in a single request to the Panel API when booting the
-	// Wings instance. A single request is initially made to the Panel to get this number
-	// of servers, and then the pagination status is checked and additional requests are
-	// fired off in parallel to request the remaining pages.
-	//
-	// It is not recommended to change this from the default as you will likely encounter
-	// memory limits on your Panel instance. In the grand scheme of things 4 requests for
-	// 50 servers is likely just as quick as two for 100 or one for 400, and will certainly
-	// be less likely to cause performance issues on the Panel.
-	BootServersPerPage int `default:"50" yaml:"boot_servers_per_page"`
 }
 
 type SystemConfiguration struct {
