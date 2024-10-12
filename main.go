@@ -1,15 +1,11 @@
 package main
 
 import (
-	log2 "log"
 	"net/http"
 	"os"
-	"path/filepath"
 	"time"
 
-	"github.com/NYTimes/logrotate"
 	"github.com/apex/log"
-	"github.com/apex/log/handlers/cli"
 	"github.com/apex/log/handlers/multi"
 	"github.com/apex/log/handlers/text"
 	"github.com/kubectyl/kuber/remote"
@@ -20,21 +16,12 @@ import (
 // Configures the global logger for Zap so that we can call it from any location
 // in the code without having to pass around a logger instance.
 func initLogging() {
-	dir := config.Get().System.LogDirectory
-	p := filepath.Join(dir, "/sftp-server.log")
-	if err := os.MkdirAll(filepath.Dir(p), 0o755); err != nil {
-		log2.Fatalf("sftp: could not create internal sftp server log directory: %s", err)
-	}
-	w, err := logrotate.NewFile(p)
-	if err != nil {
-		log2.Fatalf("failed to create server log: %s", err)
-	}
 	log.SetLevel(log.InfoLevel)
 	if config.Get().Debug {
 		log.SetLevel(log.DebugLevel)
 	}
-	log.SetHandler(multi.New(text.New(os.Stdout), cli.New(w.File)))
-	log.WithField("path", p).Info("writing log file to disk")
+	log.SetHandler(multi.New(text.New(os.Stdout)))
+	log.Info("writing log file to disk")
 }
 
 func main() {
